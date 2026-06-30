@@ -231,10 +231,57 @@
             document.getElementById('imagePreviewContainer').classList.add('hidden');
         }
 
-        // EDIT: Mengarahkan langsung ke Link Grup WhatsApp di tab baru ketika ditekan
+        // UPDATE: Otomatis menyusun teks laporan, menyalin ke clipboard, lalu membuka grup WhatsApp
         function handleConfirmation() {
-            const whatsappGroupURL = "https://chat.whatsapp.com/CSFYBxP3WxbHwNbeWDPKMe";
-            window.open(whatsappGroupURL, '_blank');
+            const form = document.getElementById('surveyForm');
+            const formData = new FormData(form);
+            
+            // Mengambil nilai input
+            const tanggal = formData.get('Tanggal') || '-';
+            const surveyor = formData.get('Surveyor') || '-';
+            const lintasan = formData.get('Lintasan_Grid') || '-';
+            const poligon = formData.get('Poligon') || '-';
+            const patokBm = formData.get('Patok_BM') || '-';
+            const reukur = formData.get('Reukur') || '-';
+            const spasi50 = formData.get('Spasi_50') || '-';
+            const spasi100 = formData.get('Spasi_100') || '-';
+            const hole50 = formData.get('Hole_50') || '-';
+            const hole100 = formData.get('Hole_100') || '-';
+            const surveyId = formData.get('Survey_ID') || '-';
+            const noSeri = formData.get('No_Seri_Alat') || '-';
+            const keterangan = formData.get('Keterangan') || '-';
+            
+            const mobilisasi = formData.get('Mobilisasi') || '-';
+            const onAlat1 = formData.get('On_Alat_1') || '-';
+            const istirahat = formData.get('Istirahat') || '-';
+            const onAlat2 = formData.get('On_Alat_2') || '-';
+            const demobilisasi = formData.get('Demobilisasi') || '-';
+
+            // Menyusun format teks untuk WhatsApp
+            const teksLaporan = 
+`*LAPORAN HARIAN PENGUKURAN*
+*PT Antam Unit Geomin - Site Marimoi*
+----------------------------------------
+📅 *Tanggal:* ${tanggal}
+👤 *Surveyor:* ${surveyor}
+🛠️ *No Seri Alat:* ${noSeri}
+📝 *Keterangan:* ${keterangan}
+----------------------------------------
+_Data laporan telah disalin otomatis._`;
+
+            // Proses copy teks ke memori HP/Laptop
+            navigator.clipboard.writeText(teksLaporan).then(() => {
+                alert("Teks ringkasan laporan BERHASIL DISALIN!\nSetelah dialihkan ke grup WA, silakan langsung TEMPEL / PASTE (Ctrl+V) di kolom chat.");
+                
+                // Membuka Link grup WhatsApp
+                const whatsappGroupURL = "https://chat.whatsapp.com/CSFYBxP3WxbHwNbeWDPKMe";
+                window.open(whatsappGroupURL, '_blank');
+            }).catch(err => {
+                console.error('Gagal menyalin data: ', err);
+                // Fallback jika fitur clipboard diblokir browser, tetap buka grup WA
+                const whatsappGroupURL = "https://chat.whatsapp.com/CSFYBxP3WxbHwNbeWDPKMe";
+                window.open(whatsappGroupURL, '_blank');
+            });
         }
 
         function handleSubmit(event) {
