@@ -171,7 +171,7 @@
                 <h3 class="text-lg font-bold text-mining-dark flex items-center gap-2 mb-2">
                     <i class="fa-solid fa-users-gear text-mining-orange"></i> Absensi Crew
                 </h3>
-                <p class="text-xs text-gray-500 mb-4 italic">Isi nama crew dan status kehadirannya.</p>
+                <p class="text-xs text-gray-500 mb-4 italic">Isi nama crew dan status kehadirannya (Hanya tersalin ke WA, tidak masuk spreadsheet)</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <!-- Crew 1 -->
                     <div class="flex gap-2">
@@ -254,9 +254,9 @@
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <h3 class="text-2xl font-black text-gray-800 mb-2">Hatur Nuhun Bro👍</h3>
-            <p class="text-gray-600 text-sm mb-6">Data Laporan Harian Pengukuran Anda berhasil terkirim ke PIC.</p>
-            <button onclick="closeModal('successModal')" class="w-full bg-mining-dark text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors">
-                Selesai
+            <p class="text-gray-600 text-sm mb-6">Data Laporan berhasil terkirim ke Spreadsheet dan format teks WA otomatis disalin!</p>
+            <button onclick="redirectToWhatsAppFromSuccess()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-2 px-4 rounded-lg hover:from-emerald-600 hover:to-green-500 transition-colors flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Tempel di WhatsApp
             </button>
         </div>
     </div>
@@ -267,7 +267,7 @@
                 <i class="fa-solid fa-paste"></i>
             </div>
             <h3 class="text-xl font-black text-gray-800 mb-2">Laporan Berhasil Disalin!</h3>
-            <p class="text-gray-600 text-sm mb-6">Setelah dialihkan ke grup <i><b>Leader Marimoi</b></i>, langsung <b>TEMPEL / PASTE</b> di kolom chat untuk konfirmasi ke PIC.<br><br>Jangan lupa mengisi absensi crew di kolom chat grup.</p>
+            <p class="text-gray-600 text-sm mb-6">Setelah dialihkan ke grup <i><b>Leader Marimoi</b></i>, langsung <b>TEMPEL / PASTE</b> di kolom chat untuk konfirmasi ke PIC.</p>
             <button onclick="redirectToWhatsApp()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-2.5 px-4 rounded-lg hover:from-emerald-600 hover:to-green-500 transition-colors flex items-center justify-center gap-2">
                 <i class="fa-brands fa-whatsapp text-lg"></i> Buka WhatsApp
             </button>
@@ -315,7 +315,8 @@
             document.getElementById('imagePreviewContainer').classList.add('hidden');
         }
 
-        function handleConfirmation() {
+        // Fungsi khusus membuat template teks laporan (bisa dipanggil GASKEUN & WA)
+        function generateReportText() {
             const form = document.getElementById('surveyForm');
             const formData = new FormData(form);
             
@@ -324,7 +325,6 @@
             const noSeri = formData.get('No_Seri_Alat') || '-';
             const keterangan = formData.get('Keterangan') || '-';
 
-            // Mengambil dinamis data absensi dari input & dropdown
             let absensiText = "";
             for (let i = 1; i <= 6; i++) {
                 const namaCrew = document.getElementById(`crew_nama_${i}`).value.trim() || `Crew ${i}`;
@@ -332,9 +332,7 @@
                 absensiText += `${i}. ${namaCrew} / ${statusCrew}\n`;
             }
 
-            // Template teks laporan dengan tambahan Absensi Crew Dinamis
-            const teksLaporan = 
-`*LAPORAN HARIAN PENGUKURAN*
+            return `*LAPORAN HARIAN PENGUKURAN*
 *PT Antam Unit Geomin - Site Marimoi*
 ----------------------------------------
 📅 *Tanggal:* ${tanggal}
@@ -345,7 +343,10 @@
 Absensi Crew :
 ${absensiText}----------------------------------------
 _Data laporan telah disalin otomatis._`;
+        }
 
+        function handleConfirmation() {
+            const teksLaporan = generateReportText();
             navigator.clipboard.writeText(teksLaporan).then(() => {
                 openModal('copyModal');
             }).catch(err => {
@@ -359,6 +360,11 @@ _Data laporan telah disalin otomatis._`;
             window.open(whatsappGroupURL, '_blank');
         }
 
+        function redirectToWhatsAppFromSuccess() {
+            closeModal('successModal');
+            window.open(whatsappGroupURL, '_blank');
+        }
+
         function handleSubmit(event) {
             event.preventDefault();
             
@@ -367,6 +373,12 @@ _Data laporan telah disalin otomatis._`;
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Memproses Data...`;
+
+            // AKSI DISALIN OTOMATIS: Salin teks laporan saat menekan tombol GASKEUN
+            const teksLaporanSelesai = generateReportText();
+            navigator.clipboard.writeText(teksLaporanSelesai).catch(err => {
+                console.error('Gagal menyalin otomatis pada submit:', err);
+            });
 
             const formData = new FormData(form);
             const searchParams = new URLSearchParams();
@@ -402,7 +414,7 @@ _Data laporan telah disalin otomatis._`;
                 openModal('successModal');
                 form.reset();
                 removeImage(null);
-                // Reset manual untuk form absensi di luar objek form bawaan jika diperlukan
+                // Reset manual form absensi setelah data aman terkirim
                 for(let i=1; i<=6; i++){
                     document.getElementById(`crew_nama_${i}`).value = "";
                     document.getElementById(`crew_status_${i}`).value = "hadir";
