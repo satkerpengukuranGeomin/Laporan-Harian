@@ -120,7 +120,7 @@
                 <h3 class="text-lg font-bold text-mining-dark flex items-center gap-2 mb-2">
                     <i class="fa-solid fa-clock text-mining-orange"></i> Linimasa Kegiatan (Format 24 Jam)
                 </h3>
-                <p class="text-xs text-gray-500 mb-4 italic">Masukkan rentang waktu kegiatan contoh: 07:00 - 08:00</p>
+                <p class="text-xs text-gray-500 mb-4 italic">Masukkan rentang waktu kegiatan contoh: 07:00-08:00</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Mobilisasi</label>
@@ -149,7 +149,7 @@
                 <h3 class="text-lg font-bold text-mining-dark flex items-center gap-2 mb-4">
                     <i class="fa-solid fa-camera text-mining-orange"></i> Dokumentasi Kegiatan
                 </h3>
-                <p class="text-xs text-gray-500 mb-4 italic">Minimal 1 hari 1 dokumentasi</p>
+                <p class="text-xs text-gray-500 mb-4 italic">Minimal 1 hari 1 documentation</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:border-mining-orange transition-colors cursor-pointer relative">
                         <input type="file" id="fotoInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(event)">
@@ -178,7 +178,6 @@
         </form>
     </main>
 
-    <!-- Modal Sukses Send Data (GASKEUN) -->
     <div id="successModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-transform border-t-8 border-green-500">
             <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
@@ -192,14 +191,13 @@
         </div>
     </div>
 
-    <!-- Modal Sukses Salin & Alihkan Ke WhatsApp (NEW) -->
     <div id="copyModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-transform border-t-8 border-blue-500">
             <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
                 <i class="fa-solid fa-paste"></i>
             </div>
             <h3 class="text-xl font-black text-gray-800 mb-2">Laporan Berhasil Disalin!</h3>
-            <p class="text-gray-600 text-sm mb-6">Setelah dialihkan ke grup <i><b>Leader Marimoi</b></i>, langsung <b>TEMPEL / PASTE</b> di kolom chat untuk konfirmasi ke PIC.</p>
+            <p class="text-gray-600 text-sm mb-6">Setelah dialihkan ke grup <i><b>Leader Marimoi</b></i>, langsung <b>TEMPEL / PASTE</b> di kolom chat untuk konfirmasi ke PIC.<br><br>Jangan lupa mengisi absensi crew di kolom chat grup.</p>
             <button onclick="redirectToWhatsApp()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-2.5 px-4 rounded-lg hover:from-emerald-600 hover:to-green-500 transition-colors flex items-center justify-center gap-2">
                 <i class="fa-brands fa-whatsapp text-lg"></i> Buka WhatsApp
             </button>
@@ -256,6 +254,7 @@
             const noSeri = formData.get('No_Seri_Alat') || '-';
             const keterangan = formData.get('Keterangan') || '-';
 
+            // Template teks laporan dengan tambahan Absensi Crew
             const teksLaporan = 
 `*LAPORAN HARIAN PENGUKURAN*
 *PT Antam Unit Geomin - Site Marimoi*
@@ -265,23 +264,23 @@
 🔭 *No Seri Alat:* ${noSeri}
 📝 *Keterangan:* ${keterangan}
 ----------------------------------------
+Absensi Crew :
+1.    / hadir
+2.    / hadir
+3.    / hadir
+4.    / hadir
+5.    / hadir
+6.    / hadir
+----------------------------------------
 _Data laporan telah disalin otomatis._`;
-_Silahkan Mengisi Absensi Crew Ukur._`;
-----------------------------------------
-*Absensi Crew Ukur:*
-- [ ] Nama 1 / hadir
-- [ ] Nama 2 / hadir
-- [ ] Nama 3 / hadir
-- [ ] Nama 4 / hadir
-- [ ] Nama 5 / hadir
-- [ ] Nama 6 / hadir
-----------------------------------------
+
+
+
+
             navigator.clipboard.writeText(teksLaporan).then(() => {
-                // Munculkan Pop-up Kustom pengganti alert
                 openModal('copyModal');
             }).catch(err => {
                 console.error('Gagal menyalin data: ', err);
-                // Fallback jika diblokir browser, langsung arahkan ke WA
                 window.open(whatsappGroupURL, '_blank');
             });
         }
