@@ -178,6 +178,7 @@
         </form>
     </main>
 
+    <!-- Modal Sukses Send Data (GASKEUN) -->
     <div id="successModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-transform border-t-8 border-green-500">
             <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
@@ -185,8 +186,22 @@
             </div>
             <h3 class="text-2xl font-black text-gray-800 mb-2">Hatur Nuhun Bro👍</h3>
             <p class="text-gray-600 text-sm mb-6">Data Laporan Harian Pengukuran Anda berhasil terkirim ke PIC.</p>
-            <button onclick="closeModal()" class="w-full bg-mining-dark text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors">
+            <button onclick="closeModal('successModal')" class="w-full bg-mining-dark text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors">
                 Selesai
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Sukses Salin & Alihkan Ke WhatsApp (NEW) -->
+    <div id="copyModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-transform border-t-8 border-blue-500">
+            <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                <i class="fa-solid fa-paste"></i>
+            </div>
+            <h3 class="text-xl font-black text-gray-800 mb-2">Laporan Berhasil Disalin!</h3>
+            <p class="text-gray-600 text-sm mb-6">Setelah dialihkan ke grup <i><b>Leader Marimoi</b></i>, langsung <b>TEMPEL / PASTE</b> di kolom chat untuk konfirmasi ke PIC.</p>
+            <button onclick="redirectToWhatsApp()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-2.5 px-4 rounded-lg hover:from-emerald-600 hover:to-green-500 transition-colors flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Buka WhatsApp
             </button>
         </div>
     </div>
@@ -204,6 +219,7 @@
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbykSBJ6D9Tk61xX6kQdbqVF76MneElFgV9twAXdlFe_XhxmDfJRZWbBS__9J-KBxbD-fA/exec';
         let base64Image = "";
+        const whatsappGroupURL = "https://chat.whatsapp.com/E3F4gf0DB9ACL5Sw8EzkRp?s=cl&p=a&ilr=1";
 
         function previewImage(event) {
             const input = event.target;
@@ -231,57 +247,39 @@
             document.getElementById('imagePreviewContainer').classList.add('hidden');
         }
 
-        // UPDATE: Otomatis menyusun teks laporan, menyalin ke clipboard, lalu membuka grup WhatsApp
         function handleConfirmation() {
             const form = document.getElementById('surveyForm');
             const formData = new FormData(form);
             
-            // Mengambil nilai input
             const tanggal = formData.get('Tanggal') || '-';
             const surveyor = formData.get('Surveyor') || '-';
-            const lintasan = formData.get('Lintasan_Grid') || '-';
-            const poligon = formData.get('Poligon') || '-';
-            const patokBm = formData.get('Patok_BM') || '-';
-            const reukur = formData.get('Reukur') || '-';
-            const spasi50 = formData.get('Spasi_50') || '-';
-            const spasi100 = formData.get('Spasi_100') || '-';
-            const hole50 = formData.get('Hole_50') || '-';
-            const hole100 = formData.get('Hole_100') || '-';
-            const surveyId = formData.get('Survey_ID') || '-';
             const noSeri = formData.get('No_Seri_Alat') || '-';
             const keterangan = formData.get('Keterangan') || '-';
-            
-            const mobilisasi = formData.get('Mobilisasi') || '-';
-            const onAlat1 = formData.get('On_Alat_1') || '-';
-            const istirahat = formData.get('Istirahat') || '-';
-            const onAlat2 = formData.get('On_Alat_2') || '-';
-            const demobilisasi = formData.get('Demobilisasi') || '-';
 
-            // Menyusun format teks untuk WhatsApp
             const teksLaporan = 
 `*LAPORAN HARIAN PENGUKURAN*
 *PT Antam Unit Geomin - Site Marimoi*
 ----------------------------------------
 📅 *Tanggal:* ${tanggal}
 👤 *Surveyor:* ${surveyor}
-🛠️ *No Seri Alat:* ${noSeri}
+🔭 *No Seri Alat:* ${noSeri}
 📝 *Keterangan:* ${keterangan}
 ----------------------------------------
 _Data laporan telah disalin otomatis._`;
 
-            // Proses copy teks ke memori HP/Laptop
             navigator.clipboard.writeText(teksLaporan).then(() => {
-                alert("Teks ringkasan laporan BERHASIL DISALIN!\nSetelah dialihkan ke grup WA, silakan langsung TEMPEL / PASTE (Ctrl+V) di kolom chat.");
-                
-                // Membuka Link grup WhatsApp
-                const whatsappGroupURL = "https://chat.whatsapp.com/CSFYBxP3WxbHwNbeWDPKMe";
-                window.open(whatsappGroupURL, '_blank');
+                // Munculkan Pop-up Kustom pengganti alert
+                openModal('copyModal');
             }).catch(err => {
                 console.error('Gagal menyalin data: ', err);
-                // Fallback jika fitur clipboard diblokir browser, tetap buka grup WA
-                const whatsappGroupURL = "https://chat.whatsapp.com/CSFYBxP3WxbHwNbeWDPKMe";
+                // Fallback jika diblokir browser, langsung arahkan ke WA
                 window.open(whatsappGroupURL, '_blank');
             });
+        }
+
+        function redirectToWhatsApp() {
+            closeModal('copyModal');
+            window.open(whatsappGroupURL, '_blank');
         }
 
         function handleSubmit(event) {
@@ -324,9 +322,7 @@ _Data laporan telah disalin otomatis._`;
                 }
             })
             .then(response => {
-                document.getElementById('successModal').classList.remove('hidden');
-                document.getElementById('successModal').classList.add('flex');
-                
+                openModal('successModal');
                 form.reset();
                 removeImage(null);
             })
@@ -340,9 +336,16 @@ _Data laporan telah disalin otomatis._`;
             });
         }
 
-        function closeModal() {
-            document.getElementById('successModal').classList.add('hidden');
-            document.getElementById('successModal').classList.remove('flex');
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
     </script>
 </body>
