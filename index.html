@@ -71,7 +71,7 @@
                     <i class="fa-solid fa-layer-group text-mining-orange"></i> Hasil Pengukuran
                 </h3>
                 <p class="text-xs text-gray-500 mb-4 italic">abaikan kolom lain jika memang tidak perlukan</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">                    
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">                     
                     <div>
                         <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Lintasan Grid</label>
                         <input type="text" name="Lintasan_Grid" placeholder="Jarak Lintasan ( , )" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-orange focus:border-transparent outline-none">
@@ -155,11 +155,11 @@
                 <p class="text-xs text-gray-500 mb-4 italic">Minimal 1 hari 1 dokumentasi</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:border-mining-orange transition-colors cursor-pointer relative">
-                        <input type="file" id="fotoInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(event)">
+                        <input type="file" id="fotoInput" accept="image/*, .heic, .heif, .webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewAndProcessImage(event)">
                         <div id="uploadPlaceholder" class="text-center">
                             <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-2"></i>
                             <p class="text-sm font-semibold text-gray-600">Klik atau seret foto kegiatan ke sini</p>
-                            <p class="text-xs text-gray-400 mt-1">Format: JPG, JPEG, PNG</p>
+                            <p class="text-xs text-gray-400 mt-1">Mendukung semua format foto (Termasuk iPhone/Android)</p>
                         </div>
                         <div id="imagePreviewContainer" class="hidden w-full max-w-xs text-center">
                             <img id="imgPreview" src="#" alt="Preview" class="rounded-lg shadow-md max-h-48 mx-auto object-cover mb-2">
@@ -236,7 +236,7 @@
                 <button type="submit" id="submitBtn" class="w-full md:w-2/3 bg-gradient-to-r from-mining-orange to-amber-500 text-white font-bold text-lg py-3 px-6 rounded-xl shadow-lg hover:from-amber-500 hover:to-mining-orange transform hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 tracking-wide">
                     <i class="fa-solid fa-paper-plane"></i> GASKEUN
                 </button>
-                
+            </div>
         </form>
     </main>
 
@@ -264,23 +264,45 @@
     </footer>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbykSBJ6D9Tk61xX6kQdbqVF76MneElFgV9twAXdlFe_XhxmDfJRZWbBS__9J-KBxbD-fA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxLSnaL0l6LA-aWKqW2S50rA70gpB0k7Yq1Jb-wnC2k7OJCF6YEJDVaw34joqs_ke-7Pg/exec';
         let base64Image = "";
         const whatsappGroupURL = "https://chat.whatsapp.com/E3F4gf0DB9ACL5Sw8EzkRp?s=cl&p=a&ilr=1";
 
-        function previewImage(event) {
+        function previewAndProcessImage(event) {
             const input = event.target;
-            const reader = new FileReader();
             
             if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
                 reader.onload = function(e) {
-                    base64Image = e.target.result;
-                    
-                    document.getElementById('uploadPlaceholder').classList.add('hidden');
-                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
-                    document.getElementById('imgPreview').src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        const MAX_WIDTH = 1024;
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        base64Image = canvas.toDataURL('image/jpeg', 0.7);
+
+                        document.getElementById('uploadPlaceholder').classList.add('hidden');
+                        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                        document.getElementById('imgPreview').src = base64Image;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -294,7 +316,6 @@
             document.getElementById('imagePreviewContainer').classList.add('hidden');
         }
 
-        // Fungsi khusus membuat template teks laporan (bisa dipanggil GASKEUN & WA)
         function generateReportText() {
             const form = document.getElementById('surveyForm');
             const formData = new FormData(form);
@@ -305,10 +326,22 @@
             const keterangan = formData.get('Keterangan') || '-';
 
             let absensiText = "";
+            let nomorUrut = 1; // Mengatur ulang penomoran agar rapi
+
             for (let i = 1; i <= 6; i++) {
-                const namaCrew = document.getElementById(`crew_nama_${i}`).value.trim() || `Crew ${i}`;
+                const namaCrew = document.getElementById(`crew_nama_${i}`).value.trim();
                 const statusCrew = document.getElementById(`crew_status_${i}`).value;
-                absensiText += `${i}. ${namaCrew} / ${statusCrew}\n`;
+                
+                // Hanya masukkan crew yang kolom namanya diisi
+                if (namaCrew !== "") {
+                    absensiText += `${nomorUrut}. ${namaCrew} / ${statusCrew}\n`;
+                    nomorUrut++;
+                }
+            }
+
+            // Jika tidak ada crew sama sekali yang diisi
+            if (absensiText === "") {
+                absensiText = "Tidak ada crew yang diisi\n";
             }
 
             return `*LAPORAN HARIAN PENGUKURAN*
@@ -322,21 +355,6 @@
 Absensi Crew :
 ${absensiText}----------------------------------------
 _Data laporan telah disalin otomatis._`;
-        }
-
-        function handleConfirmation() {
-            const teksLaporan = generateReportText();
-            navigator.clipboard.writeText(teksLaporan).then(() => {
-                openModal('copyModal');
-            }).catch(err => {
-                console.error('Gagal menyalin data: ', err);
-                window.open(whatsappGroupURL, '_blank');
-            });
-        }
-
-        function redirectToWhatsApp() {
-            closeModal('copyModal');
-            window.open(whatsappGroupURL, '_blank');
         }
 
         function redirectToWhatsAppFromSuccess() {
@@ -353,7 +371,6 @@ _Data laporan telah disalin otomatis._`;
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Memproses Data...`;
 
-            // AKSI DISALIN OTOMATIS: Salin teks laporan saat menekan tombol GASKEUN
             const teksLaporanSelesai = generateReportText();
             navigator.clipboard.writeText(teksLaporanSelesai).catch(err => {
                 console.error('Gagal menyalin otomatis pada submit:', err);
@@ -393,7 +410,6 @@ _Data laporan telah disalin otomatis._`;
                 openModal('successModal');
                 form.reset();
                 removeImage(null);
-                // Reset manual form absensi setelah data aman terkirim
                 for(let i=1; i<=6; i++){
                     document.getElementById(`crew_nama_${i}`).value = "";
                     document.getElementById(`crew_status_${i}`).value = "hadir";
