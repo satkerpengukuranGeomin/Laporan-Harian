@@ -148,27 +148,6 @@
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-50 border-b border-gray-100">
-                <h3 class="text-lg font-bold text-mining-dark flex items-center gap-2 mb-4">
-                    <i class="fa-solid fa-camera text-mining-orange"></i> Dokumentasi Kegiatan
-                </h3>
-                <p class="text-xs text-gray-500 mb-4 italic">Minimal 1 hari 1 dokumentasi</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white hover:border-mining-orange transition-colors cursor-pointer relative">
-                        <input type="file" id="fotoInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewAndProcessImage(event)">
-                        <div id="uploadPlaceholder" class="text-center">
-                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-sm font-semibold text-gray-600">Klik atau seret foto kegiatan ke sini</p>
-                            <p class="text-xs text-gray-400 mt-1">Mendukung semua format foto (Termasuk iPhone/Android)</p>
-                        </div>
-                        <div id="imagePreviewContainer" class="hidden w-full max-w-xs text-center">
-                            <img id="imgPreview" src="#" alt="Preview" class="rounded-lg shadow-md max-h-48 mx-auto object-cover mb-2">
-                            <button type="button" onclick="removeImage(event)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors relative z-10">Hapus Foto</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="p-6 bg-white">
                 <h3 class="text-lg font-bold text-mining-dark flex items-center gap-2 mb-2">
                     <i class="fa-solid fa-users-gear text-mining-orange"></i> Absensi Crew Pengukuran
@@ -264,59 +243,8 @@
     </footer>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbze3H6xfE5yN7XnX-gPZZAnL3xIiOH7HR3kL62UAvP8nTtRwAu7T3WB67mAPdNgEuXaPA/exec';
-        let base64Image = "";
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwulAHpV8KNaKgWaeUOkKSYr4h6XHpHplaTZ3BLVL8lFmq16tj-8Cjy6WymIZnqCfeo1Q/exec';
         const whatsappGroupURL = "https://chat.whatsapp.com/E3F4gf0DB9ACL5Sw8EzkRp?s=cl&p=a&ilr=1";
-
-        function previewAndProcessImage(event) {
-            const input = event.target;
-            
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        // Pengaturan Maksimal Resolusi Gambar agar Ringan di Server Drive
-                        const MAX_WIDTH = 1024;
-                        if (width > MAX_WIDTH) {
-                            height = Math.round((height * MAX_WIDTH) / width);
-                            width = MAX_WIDTH;
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // KUNCI UTAMA: Mengubah file mentah (termasuk .heic/.heif Apple) menjadi format JPEG universal
-                        base64Image = canvas.toDataURL('image/jpeg', 0.7);
-
-                        document.getElementById('uploadPlaceholder').classList.add('hidden');
-                        document.getElementById('imagePreviewContainer').classList.remove('hidden');
-                        document.getElementById('imgPreview').src = base64Image;
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeImage(event) {
-            if (event && typeof event.stopPropagation === 'function') {
-                event.stopPropagation();
-            }
-            base64Image = "";
-            document.getElementById('fotoInput').value = "";
-            document.getElementById('uploadPlaceholder').classList.remove('hidden');
-            document.getElementById('imagePreviewContainer').classList.add('hidden');
-        }
 
         function generateReportText() {
             const form = document.getElementById('surveyForm');
@@ -397,9 +325,6 @@ _Data laporan telah disalin otomatis._`;
             searchParams.append('Istirahat', formData.get('Istirahat') || '');
             searchParams.append('On-Alat_2', formData.get('On_Alat_2') || '');
             searchParams.append('Demobilisasi', formData.get('Demobilisasi') || '');
-            
-            // Mengirimkan data gambar terkompresi Base64 yang valid ke Apps Script
-            searchParams.append('Dokumentasi_Kegiatan', base64Image || '');
 
             fetch(scriptURL, {
                 method: 'POST',
@@ -411,7 +336,6 @@ _Data laporan telah disalin otomatis._`;
             .then(response => {
                 openModal('successModal');
                 form.reset();
-                removeImage(null);
                 for(let i=1; i<=6; i++){
                     document.getElementById(`crew_nama_${i}`).value = "";
                     document.getElementById(`crew_status_${i}`).value = "hadir";
