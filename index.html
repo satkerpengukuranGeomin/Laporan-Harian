@@ -58,7 +58,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Tanggal</label>
-                        <input type="date" name="Tanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none">
+                        <input type="date" id="form_tanggal" name="Tanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Surveyor</label>
@@ -158,55 +158,67 @@
                     <div class="flex gap-2">
                         <input type="text" id="crew_nama_1" placeholder="Nama Crew 1" class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm">
                         <select id="crew_status_1" class="w-1/3 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm bg-gray-50 font-medium">
-                            <option value="hadir">Hadir</option>
-                            <option value="sakit">Sakit</option>
-                            <option value="izin">Izin</option>
-                            <option value="tanpa keterangan">Alpa</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Cuti">Cuti</option>
                         </select>
                     </div>
                     <div class="flex gap-2">
                         <input type="text" id="crew_nama_2" placeholder="Nama Crew 2" class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm">
                         <select id="crew_status_2" class="w-1/3 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm bg-gray-50 font-medium">
-                            <option value="hadir">Hadir</option>
-                            <option value="sakit">Sakit</option>
-                            <option value="izin">Izin</option>
-                            <option value="tanpa keterangan">Alpa</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Cuti">Cuti</option>
                         </select>
                     </div>
                     <div class="flex gap-2">
                         <input type="text" id="crew_nama_3" placeholder="Nama Crew 3" class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm">
                         <select id="crew_status_3" class="w-1/3 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm bg-gray-50 font-medium">
-                            <option value="hadir">Hadir</option>
-                            <option value="sakit">Sakit</option>
-                            <option value="izin">Izin</option>
-                            <option value="tanpa keterangan">Alpa</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Cuti">Cuti</option>
                         </select>
                     </div>
                     <div class="flex gap-2">
                         <input type="text" id="crew_nama_4" placeholder="Nama Crew 4" class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm">
                         <select id="crew_status_4" class="w-1/3 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm bg-gray-50 font-medium">
-                            <option value="hadir">Hadir</option>
-                            <option value="sakit">Sakit</option>
-                            <option value="izin">Izin</option>
-                            <option value="tanpa keterangan">Alpa</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Cuti">Cuti</option>
                         </select>
                     </div>
                     <div class="flex gap-2">
                         <input type="text" id="crew_nama_5" placeholder="Nama Crew 5" class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm">
                         <select id="crew_status_5" class="w-1/3 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm bg-gray-50 font-medium">
-                            <option value="hadir">Hadir</option>
-                            <option value="sakit">Sakit</option>
-                            <option value="izin">Izin</option>
-                            <option value="tanpa keterangan">Alpa</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Cuti">Cuti</option>
                         </select>
                     </div>
                     <div class="flex gap-2">
                         <input type="text" id="crew_nama_6" placeholder="Nama Crew 6" class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm">
                         <select id="crew_status_6" class="w-1/3 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mining-dark focus:border-transparent outline-none text-sm bg-gray-50 font-medium">
-                            <option value="hadir">Hadir</option>
-                            <option value="sakit">Sakit</option>
-                            <option value="izin">Izin</option>
-                            <option value="tanpa keterangan">Alpa</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                            <option value="Libur">Libur</option>
+                            <option value="Cuti">Cuti</option>
                         </select>
                     </div>
                 </div>
@@ -226,7 +238,7 @@
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <h3 class="text-2xl font-black text-gray-800 mb-2">Hatur Nuhun Bro👍</h3>
-            <p class="text-gray-600 text-sm mb-6">Data Laporan berhasil terkirim ke PIC dan format teks otomatis disalin!<br> silahkan tempel teks di WhatsApp</p>
+            <p class="text-gray-600 text-sm mb-6">Data Laporan & Absensi berhasil terkirim ke PIC dan format teks otomatis disalin!<br> silahkan tempel teks di WhatsApp</p>
             <button onclick="redirectToWhatsAppFromSuccess()" class="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold py-2 px-4 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-colors flex items-center justify-center gap-2">
                 <i class="fa-brands fa-whatsapp text-lg"></i> Konfirmasi di WhatsApp
             </button>
@@ -244,7 +256,12 @@
     </footer>
 
     <script>
+        // Link Spreadsheet Laporan Terdahulu (Tetap Dipertahankan)
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwulAHpV8KNaKgWaeUOkKSYr4h6XHpHplaTZ3BLVL8lFmq16tj-8Cjy6WymIZnqCfeo1Q/exec';
+        
+        // Link Spreadsheet Absensi Crew Baru
+        const absensiScriptURL = 'https://script.google.com/macros/s/AKfycbwYXUdg1B7BO5grmjHgkD1g-ez3pydXSZTWe8Y5SIiO2RIA1HcKpC9DpO25kGBUIGApZA/exec';
+        
         const whatsappGroupURL = "https://chat.whatsapp.com/E3F4gf0DB9ACL5Sw8EzkRp?s=cl&p=a&ilr=1";
 
         function generateReportText() {
@@ -306,8 +323,9 @@ _Data laporan telah disalin otomatis._`;
             });
 
             const formData = new FormData(form);
-            const searchParams = new URLSearchParams();
             
+            // --- PROSES 1: Data Laporan Harian (Sesuai Struktur Lama) ---
+            const searchParams = new URLSearchParams();
             searchParams.append('Tanggal', formData.get('Tanggal') || '');
             searchParams.append('Surveyor', formData.get('Surveyor') || '');
             searchParams.append('Lintasan_Grid', formData.get('Lintasan_Grid') || '');
@@ -327,19 +345,44 @@ _Data laporan telah disalin otomatis._`;
             searchParams.append('On-Alat_2', formData.get('On_Alat_2') || '');
             searchParams.append('Demobilisasi', formData.get('Demobilisasi') || '');
 
-            fetch(scriptURL, {
+            const requestLaporan = fetch(scriptURL, {
                 method: 'POST',
                 body: searchParams,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+
+            // --- PROSES 2: Data Absensi Crew (Ke Link Baru) ---
+            const tanggalValue = document.getElementById('form_tanggal').value || '';
+            const listAbsensiPromises = [];
+
+            for (let i = 1; i <= 6; i++) {
+                const namaCrew = document.getElementById(`crew_nama_${i}`).value.trim();
+                const statusCrew = document.getElementById(`crew_status_${i}`).value;
+
+                if (namaCrew !== "") {
+                    const absensiParams = new URLSearchParams();
+                    absensiParams.append('Tanggal', tanggalValue);
+                    absensiParams.append('Nama_Crew', namaCrew);
+                    absensiParams.append('Status_Kehadiran', statusCrew);
+
+                    // Kirim per baris nama crew yang terisi
+                    const absensiFetch = fetch(absensiScriptURL, {
+                        method: 'POST',
+                        body: absensiParams,
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    });
+                    listAbsensiPromises.push(absensiFetch);
                 }
-            })
-            .then(response => {
+            }
+
+            // Gabungkan semua pengiriman data agar berjalan bersamaan
+            Promise.all([requestLaporan, ...listAbsensiPromises])
+            .then(responses => {
                 openModal('successModal');
                 form.reset();
                 for(let i=1; i<=6; i++){
                     document.getElementById(`crew_nama_${i}`).value = "";
-                    document.getElementById(`crew_status_${i}`).value = "hadir";
+                    document.getElementById(`crew_status_${i}`).value = "Hadir";
                 }
             })
             .catch(error => {
